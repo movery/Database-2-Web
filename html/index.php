@@ -9,23 +9,40 @@
     <p>
       Students Registered
 
-      <!-- PHP Section creates dropdown menu populated with
-           value = $SID, name = $name -->
       <?php
-        include('db.php');
+        include('queries.php'); include('db.php');
+
+        // Dropdown Menu and Form Submittable by button.
+        echo "<form id='s' method='post'>";
 
         echo "<select name='formStudent'>";
           echo "<option value=''>Select...</option>";
 
-        $students = $con->query("SELECT SID, name FROM students");
-        while($row = $students->fetch_assoc()) {
-          $SID = $row['SID'];
-          $name = $row['name'];
-          echo '<option value="'.$SID.'">'.$name.'</option>';
-        }
-        echo "</select>";
-      ?>
+          $con = connectToDB();
+          $students = $con->query("SELECT SID, name FROM students");
+          $con->close();
 
+          while($row = $students->fetch_assoc()) {
+            $SID = $row['SID'];
+            $name = $row['name'];
+            echo '<option value="'.$SID.'">'.$name.'</option>';
+          }
+        echo "</select>";
+        echo "<input type='submit' name='formSubmit' value='View Student Info'>";
+        echo "</form>";
+
+        // Response to Button Press
+        if (isset($_POST['formSubmit'])) {
+          $varSID = $_POST['formStudent'];
+          if ($varSID == "") {
+            echo "<p>Please select a student</p>";
+          } else {
+            displayStudentInfo($varSID);
+            echo "<br></br>";
+            displayStudentCourses($varSID);
+          }
+        }
+      ?>
     </p>
   </body>
 </html>
