@@ -37,7 +37,7 @@
             while($row = $courses->fetch_assoc()) {
               $CID = $row['CID'];
               $name = $row['name'];
-              echo '<option value="'.$SID.'">'.$name.'</option>';
+              echo '<option value="'.$CID.'">'.$name.'</option>';
             }
           echo "</select>";
         echo "</form>";
