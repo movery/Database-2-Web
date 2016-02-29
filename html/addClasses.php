@@ -1,5 +1,11 @@
 <html>
   <head>
+    <SCRIPT language=JavaScript>
+    function reload(obj) {
+      var val = obj.options[obj.selectedIndex].value;
+      self.location='addClasses.php?CID=' + val;
+    }
+    </script>
     <title>
       GradStudents Database
     </title>
@@ -10,10 +16,15 @@
       <?php
         include ('queries.php'); include('db.php');
 
+        @$urlCID=$_GET['CID']; // Use this line or below line if register_global is off
+        if(strlen($urlCID) > 0 and !is_numeric($urlCID)){ // to check if $cat is numeric data or not.
+          echo "Data Error";
+          exit;
+        }
+
         // Gets the passed SID
         session_start();
         $SID = $_SESSION['SID'];
-        session_destroy();
 
         displayStudentCourses($SID);
 
@@ -31,15 +42,35 @@
 
         echo "<form id='s' method='post'>";
 
-          echo "<select name='formClass'>";
+          // Pick Course
+          echo "<select name='formClass' onchange='reload(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $courses->fetch_assoc()) {
               $CID = $row['CID'];
               $name = $row['name'];
-              echo '<option value="'.$CID.'">'.$name.'</option>';
+
+              if ($row['CID'] == @$urlCID) {
+                echo '<option selected value="'.$CID.'">'.$name.'</option>';
+              } else {
+                echo '<option value="'.$CID.'">'.$name.'</option>';
+              }
+
             }
           echo "</select>";
+
+          // Pick Year
+
+          // Pick Semester
+
+          // Pick Section
+
+          // Select Grade
+
+          // Add Class Button, redirects to selfpage
+
+          // Finsih button, redirects to localhost
+
         echo "</form>";
 
 
