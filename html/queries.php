@@ -89,6 +89,5 @@
     }
     echo '</table>';
     $con->close();
-
   }
 ?>

@@ -15,20 +15,21 @@
         // Dropdown Menu and Form Submittable by button.
         echo "<form id='s' method='post'>";
 
-        echo "<select name='formStudent'>";
-          echo "<option value=''>Select...</option>";
+          echo "<select name='formStudent'>";
+            echo "<option value=''>Select...</option>";
 
-          $con = connectToDB();
-          $students = $con->query("SELECT SID, name FROM students");
-          $con->close();
+            $con = connectToDB();
+            $students = $con->query("SELECT SID, name FROM students");
+            $con->close();
 
-          while($row = $students->fetch_assoc()) {
-            $SID = $row['SID'];
-            $name = $row['name'];
-            echo '<option value="'.$SID.'">'.$name.'</option>';
-          }
-        echo "</select>";
-        echo "<input type='submit' name='formSubmit' value='View Student Info'>";
+            while($row = $students->fetch_assoc()) {
+              $SID = $row['SID'];
+              $name = $row['name'];
+              echo '<option value="'.$SID.'">'.$name.'</option>';
+            }
+          echo "</select>";
+          echo "<input type='submit' name='formSubmit' value='View Student Info'>";
+          echo "<input type='submit' name='newStudent' value='Add New Student'>";
         echo "</form>";
 
         // Response to Button Press
@@ -41,6 +42,8 @@
             echo "<br></br>";
             displayStudentCourses($varSID);
           }
+        } elseif(isset($_POST['newStudent'])) {
+          header('Location: newStudent.php');
         }
       ?>
     </p>
