@@ -60,6 +60,15 @@
           echo "</select>";
 
           // Pick Year
+          $sections = $con->query("SELECT DISTINCT yearID FROM sections WHERE sections.CID = '$urlCID'");
+          echo "<select name='formYear' onchange='reload(this)'>";
+            echo "<option value=''>Select...</option>";
+
+            while($row = $sections->fetch_assoc()) {
+              $yearID = $row['yearID'];
+              echo '<option value="'.$yearID.'">'.$yearID.'</option>';
+            }
+          echo "</select>";
 
           // Pick Semester
 

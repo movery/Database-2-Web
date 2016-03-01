@@ -20,7 +20,7 @@
             <table>
               <tr>
                 <td>Name</td>
-                <td><input type='text' value='' name = 'formName'></td>
+                <td><input type='text' value='' name = 'formName' pattern='[A-Za-z]' title='Letters Only'></td>
               </tr>
               <tr>
                 <td>Advisor</td>";
@@ -41,15 +41,15 @@
                 </tr>
                 <tr>
                   <td>Major</td>
-                  <td><input type='text' value='' name = 'formMajor'></td>
+                  <td><input type='text' value='' name = 'formMajor' pattern='[A-Za-z]' title='Letters Only'></td>
                 </tr>
                 <tr>
                   <td>Degree</td>
-                  <td><input type='text' value='' name = 'formDegree'></td>
+                  <td><input type='text' value='' name = 'formDegree' pattern='[A-Za-z]' title='Letters Only'></td>
                 </tr>
                 <tr>
                   <td>Career</td>
-                  <td><input type='text' value='' name = 'formCareer'></td>
+                  <td><input type='text' value='' name = 'formCareer' pattern='[A-Za-z]' title='Letters Only'></td>
                 </tr>
               </table>";
 
@@ -83,7 +83,7 @@
 
             session_start();
             $_SESSION['SID'] = $SID;
-            
+
             header('location: addClasses.php');
           }
         }
