@@ -1,10 +1,19 @@
 <html>
   <head>
     <SCRIPT language=JavaScript>
-    function reload(obj) {
+    function reloadClass(obj) {
       var val = obj.options[obj.selectedIndex].value;
       self.location='addClasses.php?CID=' + val;
     }
+    function reloadYear(obj) {
+      var val = obj.options[obj.selectedIndex].value;
+      self.location='addClasses.php?CID=' + <?php echo $_GET['CID'];?> + '&yearID=' + val;
+    }
+    function reloadSemester(obj) {
+      var val = obj.options[obj.selectedIndex].value;
+      self.location='addClasses.php?CID=' + <?php echo $_GET['CID'];?> + '&yearID=' + <?php echo $_GET['yearID'];?> + '&semesterID=' + val;
+    }
+
     </script>
     <title>
       GradStudents Database
@@ -17,7 +26,17 @@
         include ('queries.php'); include('db.php');
 
         @$urlCID=$_GET['CID']; // Use this line or below line if register_global is off
-        if(strlen($urlCID) > 0 and !is_numeric($urlCID)){ // to check if $cat is numeric data or not.
+        if(strlen($urlCID) > 0 && !is_numeric($urlCID)){ // to check if $cat is numeric data or not.
+          echo "Data Error";
+          exit;
+        }
+        @$urlyearID=$_GET['yearID'];
+        if(strlen($urlyearID) > 0 &&!is_numeric($urlyearID)){ // to check if $cat is numeric data or not.
+          echo "Data Error";
+          exit;
+        }
+        @$urlsemesterID=$_GET['semesterID'];
+        if(strlen($urlsemesterID) > 1){ // to check if $cat is numeric data or not.
           echo "Data Error";
           exit;
         }
@@ -43,7 +62,7 @@
         echo "<form id='s' method='post'>";
 
           // Pick Course
-          echo "<select name='formClass' onchange='reload(this)'>";
+          echo "<select name='formClass' onchange='reloadClass(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $courses->fetch_assoc()) {
@@ -61,24 +80,86 @@
 
           // Pick Year
           $sections = $con->query("SELECT DISTINCT yearID FROM sections WHERE sections.CID = '$urlCID'");
-          echo "<select name='formYear' onchange='reload(this)'>";
+          echo "<select name='formYear' onchange='reloadYear(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $sections->fetch_assoc()) {
               $yearID = $row['yearID'];
-              echo '<option value="'.$yearID.'">'.$yearID.'</option>';
+              if ($row['yearID'] == @$urlyearID) {
+                echo '<option selected value="'.$yearID.'">'.$yearID.'</option>';
+              } else {
+                echo '<option value="'.$yearID.'">'.$yearID.'</option>';
+              }
             }
           echo "</select>";
 
           // Pick Semester
+          $sections = $con->query("SELECT DISTINCT semesterID FROM sections
+                                    WHERE sections.CID = '$urlCID'
+                                      AND sections.yearID = '$urlyearID'");
+          echo "<select name='formSemester' onchange='reloadSemester(this)'>";
+            echo "<option value=''>Select...</option>";
+
+            while($row = $sections->fetch_assoc()) {
+              $semesterID = $row['semesterID'];
+              if ($row['semesterID'] == @$urlsemesterID) {
+                echo '<option selected value="'.$semesterID.'">'.$semesterID.'</option>';
+              } else {
+                echo '<option value="'.$semesterID.'">'.$semesterID.'</option>';
+              }
+            }
+          echo "</select>";
 
           // Pick Section
+          $sections = $con->query("SELECT DISTINCT secID FROM sections
+                                    WHERE sections.CID = '$urlCID'
+                                      AND sections.yearID = '$urlyearID'
+                                      AND sections.semesterID = '$urlsemesterID'");
+          echo "<select name='formSection'>";
+            echo "<option value=''>Select...</option>";
 
-          // Select Grade
+            while($row = $sections->fetch_assoc()) {
+              $secID = $row['secID'];
+              echo '<option value="'.$secID.'">'.$secID.'</option>';
+            }
+          echo "</select>";
+          $con->close();
 
-          // Add Class Button, redirects to selfpage
+          // Pick Grade
+          $possibleGrades = array('A', 'A-', 'B+', 'B', 'B-', 'C+',
+                                  'C', 'C-', 'D+', 'D', 'D-', 'F');
+          echo "<select name='formGrade'>";
+            echo "<option value=''>Select...</option>";
+            foreach($possibleGrades as $letter) {
+              echo '<option value="'.$letter.'">'.$letter.'</option>';
+            }
+          echo "</select>";
 
-          // Finsih button, redirects to localhost
+          echo "<br></br>";
+          echo "<input type='submit' name='formAdd' value='Add Class'>";
+          echo "<input type='submit' name='formFinish' value='Finish'>";
+
+          if (isset($_POST['formAdd'])) {
+            $CID        = $_POST['formClass'];
+            $yearID     = $_POST['formYear'];
+            $semesterID = $_POST['formSemester'];
+            $secID      = $_POST['formSection'];
+            $grade      = $_POST['formGrade'];
+
+            if ($CID == "" || $yearID == "" || $semesterID == ""
+                || $secID == "" || $grade == "") {
+                echo "<p>Please fill out every field</p>";
+            } else {
+              echo '<p>'.$CID.'</p>';
+              $con = connectToDB();
+              $con->query("INSERT INTO enrollment(SID, CID, secID, yearID, semesterID, grade)
+                           VALUES('$SID', '$CID', '$secID', '$yearID', '$semesterID', '$grade')");
+              header('Location: addClasses.php');
+            }
+          } elseif (isset($_POST['formFinish'])) {
+            session_destroy();
+            header('Location: index.php');
+          }
 
         echo "</form>";
 
