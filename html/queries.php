@@ -137,9 +137,13 @@
       $CID = $row['CID'];
       $class = $con->query("SELECT * FROM courses WHERE CID = '$CID'");
       $class = $class->fetch_assoc();
-      if ($class['name'] == 'Algorithms' || $class['groupID'] > 1) {
-        $groups[$class['groupID']] = 1;
+      if ($class['groupID'] > 0) {
         $credits += $class['credits'];
+        if ($class['name'] == 'Algorithms'){
+          $groups[1] = 1;
+        } else {
+          $groups[$class['groupID']] = 1;
+        }
         $grade += $possibleGrades[$row['grade']];
         $counter += 1;
         if ($possibleGrades[$row['grade']] < 3.00) {
@@ -165,10 +169,21 @@
       $gradString = $gradString . "Must take a course from Group 4<br></br>";
     }
     if ($grade < 3.00) {
-      $gradString = $gradString . "GPA is less than a B";
+      $gradString = $gradString . "GPA is less than a B<br></br>";
     }
     if ($lessThanB > 2) {
-      $gradString = $gradString . "Too many grades below B";
+      $gradString = $gradString . "Too many grades below B<br></br>";
+    }
+
+    $conditions = $con->query("SELECT conditions.CID FROM conditions, enrollment
+                               WHERE conditions.SID = '$varSID' AND
+                                     conditions.CID NOT IN (SELECT CID FROM enrollment
+                                                            WHERE SID = '$varSID')");
+    while($row = $conditions->fetch_assoc()) {
+      $CID = $row['CID'];
+      $course = $con->query("SELECT name FROM courses WHERE CID = '$CID'");
+      $course = $course->fetch_assoc();
+      $gradString = $gradstring . "Must take " . $course['name'] . "<br></br>";
     }
 
     if ($gradString == "") {
