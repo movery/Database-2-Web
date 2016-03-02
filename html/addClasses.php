@@ -137,7 +137,7 @@
 
           // Pick Grade
           $possibleGrades = array('A', 'A-', 'B+', 'B', 'B-', 'C+',
-                                  'C', 'C-', 'D+', 'D', 'D-', 'F');
+                                  'C', 'F');
           echo "<td><select name='formGrade'>";
             echo "<option value=''>Select...</option>";
             foreach($possibleGrades as $letter) {
