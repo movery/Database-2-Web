@@ -59,10 +59,20 @@
                                                       WHERE SID = '$SID') a
                                                       WHERE a.CID = p.PCID))");
 
+        echo "<br></br>
+          <table>
+            <tr>
+              <td>Course</td>
+              <td>Year</td>
+              <td>Semester</td>
+              <td>Section</td>
+              <td>Grade</td>
+            </tr>
+            <tr>";
         echo "<form id='s' method='post'>";
 
           // Pick Course
-          echo "<select name='formClass' onchange='reloadClass(this)'>";
+          echo "<td><select name='formClass' onchange='reloadClass(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $courses->fetch_assoc()) {
@@ -76,11 +86,11 @@
               }
 
             }
-          echo "</select>";
+          echo "</select></td>";
 
           // Pick Year
           $sections = $con->query("SELECT DISTINCT yearID FROM sections WHERE sections.CID = '$urlCID'");
-          echo "<select name='formYear' onchange='reloadYear(this)'>";
+          echo "<td><select name='formYear' onchange='reloadYear(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $sections->fetch_assoc()) {
@@ -91,13 +101,13 @@
                 echo '<option value="'.$yearID.'">'.$yearID.'</option>';
               }
             }
-          echo "</select>";
+          echo "</select></td>";
 
           // Pick Semester
           $sections = $con->query("SELECT DISTINCT semesterID FROM sections
                                     WHERE sections.CID = '$urlCID'
                                       AND sections.yearID = '$urlyearID'");
-          echo "<select name='formSemester' onchange='reloadSemester(this)'>";
+          echo "<td><select name='formSemester' onchange='reloadSemester(this)'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $sections->fetch_assoc()) {
@@ -108,32 +118,32 @@
                 echo '<option value="'.$semesterID.'">'.$semesterID.'</option>';
               }
             }
-          echo "</select>";
+          echo "</select></td>";
 
           // Pick Section
           $sections = $con->query("SELECT DISTINCT secID FROM sections
                                     WHERE sections.CID = '$urlCID'
                                       AND sections.yearID = '$urlyearID'
                                       AND sections.semesterID = '$urlsemesterID'");
-          echo "<select name='formSection'>";
+          echo "<td><select name='formSection'>";
             echo "<option value=''>Select...</option>";
 
             while($row = $sections->fetch_assoc()) {
               $secID = $row['secID'];
               echo '<option value="'.$secID.'">'.$secID.'</option>';
             }
-          echo "</select>";
+          echo "</select></td>";
           $con->close();
 
           // Pick Grade
           $possibleGrades = array('A', 'A-', 'B+', 'B', 'B-', 'C+',
                                   'C', 'C-', 'D+', 'D', 'D-', 'F');
-          echo "<select name='formGrade'>";
+          echo "<td><select name='formGrade'>";
             echo "<option value=''>Select...</option>";
             foreach($possibleGrades as $letter) {
               echo '<option value="'.$letter.'">'.$letter.'</option>';
             }
-          echo "</select>";
+          echo "</select></td></tr></table>";
 
           echo "<br></br>";
           echo "<input type='submit' name='formAdd' value='Add Class'>";

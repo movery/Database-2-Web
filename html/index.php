@@ -42,6 +42,8 @@
             displayStudentInfo($varSID);
             echo "<br></br>";
             displayStudentCourses($varSID);
+            echo "<br></br>";
+            displayStudentConditions($varSID);
           }
         } elseif(isset($_POST['newStudent'])) {
           header('Location: newStudent.php');

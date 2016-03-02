@@ -2,6 +2,7 @@
   include(db.php);
 
   function displayStudentInfo($varSID) {
+    echo "<h3>Student Information</h3>";
     $con = connectToDB();
     $student = $con->query("SELECT * FROM students WHERE SID = '$varSID'");
     $srow = $student->fetch_assoc();
@@ -49,6 +50,7 @@
   }
 
   function displayStudentCourses($varSID) {
+    echo "<h3>Classes Taken</h3>";
     $con = connectToDB();
     $classes = $con->query("SELECT * FROM enrollment WHERE SID = '$varSID'");
     echo '
@@ -89,5 +91,22 @@
     }
     echo '</table>';
     $con->close();
+  }
+
+  function displayStudentConditions($varSID) {
+    echo "<h3>Student must take</h3>";
+    $con = connectToDB();
+    $conditions = $con->query("SELECT * FROM conditions
+                               WHERE SID = '$varSID'");
+    echo '<table>';
+    while($row = $conditions->fetch_assoc()) {
+      $CID = $row['CID'];
+      $class = $con->query("SELECT name FROM courses
+                            WHERE CID = '$CID'");
+      $class = $class->fetch_assoc();
+      echo '<tr><td>', $class['name'], '</td></tr>';
+
+    }
+    echo '</table>';
   }
 ?>
