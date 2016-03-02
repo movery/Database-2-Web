@@ -57,9 +57,9 @@
       <table>
         <tr>
           <td>Course</td>
-          <td>Section</td>
           <td>Year</td>
           <td>Semester</td>
+          <td>Section</td>
           <td>Credits</td>
           <td>Group</td>
           <td>Grade</td>
@@ -81,9 +81,9 @@
       echo '
         <tr>
           <td>', $name, '</td>
-          <td>', $secID, '</td>
           <td>', $yearID, '</td>
           <td>', $semesterID, '</td>
+          <td>', $secID, '</td>
           <td>', $credits, '</td>
           <td>', $group, '</td>
           <td>', $grade, '</td>

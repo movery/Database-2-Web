@@ -31,6 +31,7 @@
           echo "<input type='submit' name='formSubmit' value='View Student Info'>";
           echo "<input type='submit' name='newStudent' value='Add New Student'>";
           echo "<input type='submit' name='addClasses' value='Add Classes'>";
+          echo "<input type='submit' name='addConditions' value='Add Conditions'>";
         echo "</form>";
 
         // Response to Button Press
@@ -56,6 +57,16 @@
             session_start();
             $_SESSION['SID'] = $varSID;
             header('Location: addClasses.php');
+          }
+        } elseif(isset($_POST['addConditions'])) {
+          session_start();
+          $varSID = $_POST['formStudent'];
+          if ($varSID == "") {
+            echo "<p>Please select a student</p>";
+          } else {
+            session_start();
+            $_SESSION['SID'] = $varSID;
+            header('Location: addConditions.php');
           }
         }
 

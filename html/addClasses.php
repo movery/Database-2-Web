@@ -147,6 +147,7 @@
 
           echo "<br></br>";
           echo "<input type='submit' name='formAdd' value='Add Class'>";
+          echo "<input type='submit' name='formConditions' value='Add Conditions'>";
           echo "<input type='submit' name='formFinish' value='Finish'>";
 
           if (isset($_POST['formAdd'])) {
@@ -166,7 +167,10 @@
                            VALUES('$SID', '$CID', '$secID', '$yearID', '$semesterID', '$grade')");
               header('Location: addClasses.php');
             }
-          } elseif (isset($_POST['formFinish'])) {
+          } elseif (isset($_POST['formConditions'])) {
+            header('Location: addConditions.php');
+          }
+          elseif (isset($_POST['formFinish'])) {
             session_destroy();
             header('Location: index.php');
           }
