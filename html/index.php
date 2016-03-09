@@ -1,78 +1,66 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>
-      GradStudents Database
-    </title>
+    <?php
+      // Include Headers
+      include('head.php'); include('functions.php');
+
+      // Ensure session is running
+      session_start();
+
+      // Adjust Session Variable on POST
+      if (isset($_POST['viewStudents'])) {
+        $SID = $_POST['formStudent'];
+        $_SESSION['SID'] = $SID;
+      } else {
+        $SID = $_SESSION['SID'];
+      }
+    ?>
   </head>
   <body>
-    <h1>Graduation</h1>
-    <p>
-      Students Registered
+    <div class="container">
+      <h1>Graduation</h1>
+      <div class="row">
+        <form role="form" method="POST">
+          <div class="form-group">
+            <div class="col-sm-2">
+              <select class="form-control" name='formStudent'>
+                <option value=''>Select...</option>
+                <?php
+                  // Populate dropdown menu
+                  $students = doQuery("SELECT SID, name FROM students");
+                  while($row = $students->fetch_assoc())
+                    if ($row['SID'] == $_SESSION['SID'])
+                      echo '<option selected value="'.$row['SID'].'">'.$row['name'].'</option>';
+                    else
+                      echo '<option value="'.$row['SID'].'">'.$row['name'].'</option>';
+                 ?>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-default" name="viewStudents">View Student Info</button>
+            <button type="submit" class="btn btn-default" name="addStudent">Create New Student</button>
+
+          </div>
+        </form>
+      </div>
 
       <?php
-        include('queries.php'); include('db.php');
-
-        // Dropdown Menu and Form Submittable by button.
-        echo "<form id='s' method='post'>";
-
-          echo "<select name='formStudent'>";
-            echo "<option value=''>Select...</option>";
-
-            $con = connectToDB();
-            $students = $con->query("SELECT SID, name FROM students");
-            $con->close();
-
-            while($row = $students->fetch_assoc()) {
-              $SID = $row['SID'];
-              $name = $row['name'];
-              echo '<option value="'.$SID.'">'.$name.'</option>';
-            }
-          echo "</select>";
-          echo "<input type='submit' name='formSubmit' value='View Student Info'>";
-          echo "<input type='submit' name='newStudent' value='Add New Student'>";
-          echo "<input type='submit' name='addClasses' value='Add Classes'>";
-          echo "<input type='submit' name='addConditions' value='Add Conditions'>";
-        echo "</form>";
-
-        // Response to Button Press
-        if (isset($_POST['formSubmit'])) {
-          $varSID = $_POST['formStudent'];
-          if ($varSID == "") {
-            echo "<p>Please select a student</p>";
-          } else {
-            displayStudentInfo($varSID);
-            echo "<br></br>";
-            displayStudentCourses($varSID);
-            echo "<br></br>";
-            displayStudentConditions($varSID);
-            echo "<br></br>";
-            displayStudentGraduationStatus($varSID);
-          }
-        } elseif(isset($_POST['newStudent'])) {
-          header('Location: newStudent.php');
-        } elseif(isset($_POST['addClasses'])) {
-          session_start();
-          $varSID = $_POST['formStudent'];
-          if ($varSID == "") {
-            echo "<p>Please select a student</p>";
-          } else {
-            session_start();
-            $_SESSION['SID'] = $varSID;
-            header('Location: addClasses.php');
-          }
-        } elseif(isset($_POST['addConditions'])) {
-          session_start();
-          $varSID = $_POST['formStudent'];
-          if ($varSID == "") {
-            echo "<p>Please select a student</p>";
-          } else {
-            session_start();
-            $_SESSION['SID'] = $varSID;
-            header('Location: addConditions.php');
-          }
+      if ($SID == "") {
+          echo "<p>Please select a student</p>";
+      } else {
+          displayStudentInfo($SID);
+          displayStudentCourses($SID);
+          echo '<a href="addClasses.php" class="btn btn-default" role="button">Add Classes</a>';
+          displayStudentConditions($SID);
+          echo '<a href="addConditions.php" class="btn btn-default" role="button">Add Conditions</a>';
+          displayStudentGraduationStatus($SID);
         }
-
+      if (isset($_POST['addStudent']))
+        pageRedirect('newStudent.php');
       ?>
-    </p>
+
+      <?php include('tail.php'); ?>
+    </div>
   </body>
 </html>

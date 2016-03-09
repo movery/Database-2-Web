@@ -1,70 +1,67 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>
-      GradStudents Database
-    </title>
+    <?php
+      // Include Headers
+      include('head.php'); include('functions.php');
+
+      // Ensure session is running
+      session_start();
+    ?>
   </head>
   <body>
-    <h1>Add Conditions</h1>
-    <p>
+    <div class="container">
+      <h1>Add Conditions</h1>
       <?php
-        include('queries.php'); include('db.php');
-        session_start();
         $SID = $_SESSION['SID'];
-
         displayStudentConditions($SID);
-        echo "<br></br>";
-
-        $con = ConnectToDB();
-        $courses = $con->query("SELECT CID, name FROM courses");
-
-        echo "<form id='s' method='post'>";
-
-        echo "
-          <table>
-            <tr><td>Course Name</td><tr>
-            <tr><td>";
-
-
-              // Pick Course
-              echo "<select name='formClass'>";
-                echo "<option value=''>Select...</option>";
-
-                while($row = $courses->fetch_assoc()) {
-                  $CID = $row['CID'];
-                  $name = $row['name'];
-                  echo '<option value="'.$CID.'">'.$name.'</option>';
-                }
-              echo "</select></td></tr></table>";
-
-              echo "<br></br>";
-              echo "<input type='submit' name='formAdd' value='Add Condition'>";
-              echo "<input type='submit' name='formFinish' value='Finish'>";
-
-              if (isset($_POST['formAdd'])) {
-                $CID        = $_POST['formClass'];
-                $yearID     = $_POST['formYear'];
-                $semesterID = $_POST['formSemester'];
-                $secID      = $_POST['formSection'];
-                $grade      = $_POST['formGrade'];
-
-                if ($CID == "") {
-                    echo "<p>Please fill the Course field</p>";
-                } else {
-                  $con = connectToDB();
-                  $con->query("INSERT INTO conditions(SID, CID)
-                               VALUES('$SID', '$CID')");
-                  header('Location: addConditions.php');
-                }
-              } elseif (isset($_POST['formFinish'])) {
-                session_destroy();
-                header('Location: index.php');
-              }
-
-            echo "</form>";
       ?>
 
+      <form role="form" method="POST">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="table-responsive">
+              <table class="table">
+                <tr>
+                  <th>Course</th>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control" name='formCourse'>
+                        <option value=''>Select...</option>
+                        <?php
+                          $courses = doQuery("SELECT CID, name FROM courses");
+                          while($row = $courses->fetch_assoc()) {
+                            $CID = $row['CID'];
+                            $name = $row['name'];
+                            echo '<option value="'.$CID.'">'.$name.'</option>';
+                          }
+                        ?>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-default" name="addCondition">Add Condition</button>
+        <button type="submit" class="btn btn-default" name="finish">Finish</button>
+      </form>
 
-    </p>
+      <?php
+        if (isset($_POST['addCondition'])) {
+          $CID = $_POST['formCourse'];
+          doQuery("INSERT INTO conditions(SID, CID)
+                        VALUES('$SID', '$CID')");
+          pageRedirect('addConditions.php');
+        } elseif (isset($_POST['finish'])) {
+          pageRedirect('index.php');
+        }
+      ?>
+
+      <?php include('tail.php'); ?>
+    </div>
   </body>
 </html>
