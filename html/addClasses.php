@@ -84,9 +84,9 @@
                             $CID = $row['CID'];
                             $name = $row['name'];
                             if ($row['CID'] == @$urlCID) {
-                              echo '<option selected value="'.$CID.'">'.$name.'</option>';
+                              echo '<option selected value="'.$CID.'">'.$CID." - ".$name.'</option>';
                             } else {
-                              echo '<option value="'.$CID.'">'.$name.'</option>';
+                              echo '<option value="'.$CID.'">'.$CID." - ".$name.'</option>';
                             }
                           }
                         ?>

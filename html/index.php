@@ -49,12 +49,21 @@
       if ($SID == "") {
           echo "<p>Please select a student</p>";
       } else {
-          displayStudentInfo($SID);
+          echo '
+          <div class="row">
+            <div class="col-xs-6">';
+              displayStudentInfo($SID);
+            echo '
+            </div>
+            <div class="col-xs-4">';
+              displayStudentGraduationStatus($SID);
+            echo '
+            </div>
+          </div>';
           displayStudentCourses($SID);
           echo '<a href="addClasses.php" class="btn btn-default" role="button">Add Classes</a>';
           displayStudentConditions($SID);
           echo '<a href="addConditions.php" class="btn btn-default" role="button">Add Conditions</a>';
-          displayStudentGraduationStatus($SID);
         }
       if (isset($_POST['addStudent']))
         pageRedirect('newStudent.php');
