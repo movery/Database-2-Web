@@ -15,10 +15,35 @@
     echo "<script type='text/javascript'> document.location = '$page'; </script>";
   }
 
-  function displayStudentInfo($SID) {
-      echo '
-      <h3>Student Information</h3>';
+  function calculateGPA($SID) {
 
+    // Dictionary for Letter-Grade to GPA value
+    $possibleGrades = array("A"  => 4.00,
+                            "A-" => 3.66,
+                            "B+" => 3.33,
+                            "B"  => 3.00,
+                            "B-" => 2.66,
+                            "C+" => 2.33,
+                            "C"  => 2.00,
+                            "F"  => 0.00);
+
+    $enrolled = doQuery("SELECT CID, grade FROM enrollment WHERE SID = '$SID'");
+
+    $grade = 0;
+    $count = 0;
+    while($row = $enrolled->fetch_assoc()) {
+      $course = doQuery("SELECT groupID FROM courses WHERE CID =".$row['CID'])->fetch_assoc();
+      if ($course['groupID'] > 0) {
+        $grade += $possibleGrades[$row['grade']];
+        $count++;
+      }
+    }
+    $grade /= $count;
+
+    return $grade;
+  }
+
+  function displayStudentInfo($SID) {
       // Get Student Table Data
       $student = doQuery("SELECT * FROM students WHERE SID = '$SID'")->fetch_assoc();
 
@@ -51,6 +76,10 @@
           <tr>
             <th class="col-md-2">Career</th>
             <td class="col-md-2">', $student['career'], '</td>
+          </tr>
+          <tr>
+            <th class="col-md-2">GPA</th>
+            <td class="col-md-2">', calculateGPA($SID), '</td>
           </tr>
         </table>
       </div>';
@@ -227,5 +256,80 @@
 
     echo '
     </ul>';
+  }
+
+  function returnStudentGraduationStatus($SID) {
+
+    // Initialize counter variables
+    $credits     = 0;
+    $grade       = 0;
+    $counter     = 0;
+    $lessThanB   = 0;
+    $groups      = array(0, 0, 0, 0, 0);
+    $canGraduate = 1;
+
+    // Dictionary for Letter-Grade to GPA value
+    $possibleGrades = array("A"  => 4.00,
+                            "A-" => 3.66,
+                            "B+" => 3.33,
+                            "B"  => 3.00,
+                            "B-" => 2.66,
+                            "C+" => 2.33,
+                            "C"  => 2.00,
+                            "F"  => 0.00);
+
+    // Calculate GPA, Credit Count, Group Usage
+    $enrolled = doQuery("SELECT * FROM enrollment WHERE SID = '$SID'");
+    while($row = $enrolled->fetch_assoc()) {
+      $class = doQuery("SELECT * FROM courses WHERE CID =".$row['CID'])->fetch_assoc();
+      if ($class['groupID'] > 0) {
+        if ($class['name'] == 'Algorithms')
+          $groups[1] = 1;
+        elseif ($class['groupID'] > 1)
+          $groups[$class['groupID']] = 1;
+
+        $credits += $class['credits'];
+        $grade   += $possibleGrades[$row['grade']];
+        $counter += 1;
+        if ($possibleGrades[$row['grade']] < $possibleGrades['B'])
+          $lessThanB += 1;
+      }
+    }
+    $grade /= $counter;
+
+    // Check GPA, Credit Count, and Group Requirements
+    if ($credits < 30) {
+      $canGraduate = 0;
+    }
+    if ($groups[1] == 0) {
+      $class = doQuery("SELECT CID FROM courses WHERE name = 'Algorithms'")->fetch_assoc();
+      $canGraduate = 0;
+    }
+    if ($groups[2] == 0) {
+      $canGraduate = 0;
+    }
+    if ($groups[3] == 0) {
+      $canGraduate = 0;
+    }
+    if ($groups[4] == 0) {
+      $canGraduate = 0;
+    }
+    if ($grade < $possibleGrades['B']) {
+      $canGraduate = 0;
+    }
+    if ($lessThanB > 2) {
+      $canGraduate = 0;
+    }
+    // Query for unmet conditions
+    $conditions = doQuery("SELECT CID FROM conditions
+                          WHERE SID = '$SID' AND
+                                CID NOT IN (SELECT CID FROM enrollment
+                                            WHERE SID = '$SID')");
+    while($row = $conditions->fetch_assoc()) {
+      $course = doQuery("SELECT name FROM courses WHERE CID =".$row['CID'])->fetch_assoc();
+      $canGraduate = 0;
+    }
+
+    return $canGraduate;
   }
 ?>

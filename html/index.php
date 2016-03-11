@@ -39,8 +39,8 @@
             </div>
 
             <button type="submit" class="btn btn-default" name="viewStudents">View Student Info</button>
-            <button type="submit" class="btn btn-default" name="addStudent">Create New Student</button>
-
+            <a href="newStudent.php" class="btn btn-default" role="button">Create New Student</a>
+            <a href="studentsGraduating.php" class="btn btn-default" role="button">View All Students who can Graduate</a>
           </div>
         </form>
       </div>
@@ -51,7 +51,8 @@
       } else {
           echo '
           <div class="row">
-            <div class="col-xs-6">';
+            <div class="col-xs-6">
+              <h3>Student Information</h3>';
               displayStudentInfo($SID);
             echo '
             </div>
@@ -65,8 +66,6 @@
           displayStudentConditions($SID);
           echo '<a href="addConditions.php" class="btn btn-default" role="button">Add Conditions</a>';
         }
-      if (isset($_POST['addStudent']))
-        pageRedirect('newStudent.php');
       ?>
 
       <?php include('tail.php'); ?>
