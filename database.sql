@@ -16,14 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `GradStudents`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `GradStudents` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `GradStudents`;
-
---
 -- Table structure for table `conditions`
 --
 
@@ -35,8 +27,8 @@ CREATE TABLE `conditions` (
   `CID` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`SID`,`CID`),
   KEY `CID` (`CID`),
-  CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`SID`) REFERENCES `students` (`SID`),
-  CONSTRAINT `conditions_ibfk_2` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`)
+  CONSTRAINT `conditions_ibfk_1` FOREIGN KEY (`SID`) REFERENCES `students` (`SID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `conditions_ibfk_2` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -92,8 +84,8 @@ CREATE TABLE `enrollment` (
   `grade` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`SID`,`CID`,`secID`,`yearID`,`semesterID`),
   KEY `fkEnrollment` (`CID`,`secID`,`yearID`,`semesterID`),
-  CONSTRAINT `enrollment_ibfk_1` FOREIGN KEY (`SID`) REFERENCES `students` (`SID`),
-  CONSTRAINT `fkEnrollment` FOREIGN KEY (`CID`, `secID`, `yearID`, `semesterID`) REFERENCES `sections` (`CID`, `secID`, `yearID`, `semesterID`)
+  CONSTRAINT `enrollment_ibfk_1` FOREIGN KEY (`SID`) REFERENCES `students` (`SID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fkEnrollment` FOREIGN KEY (`CID`, `secID`, `yearID`, `semesterID`) REFERENCES `sections` (`CID`, `secID`, `yearID`, `semesterID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -133,6 +125,31 @@ INSERT INTO `instructors` VALUES (1,'Tingjian Ge','Associate Professor'),(2,'Hai
 UNLOCK TABLES;
 
 --
+-- Table structure for table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permissions` (
+  `CID` int(11) NOT NULL,
+  `PID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`CID`),
+  CONSTRAINT `fk_CID` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permissions`
+--
+
+LOCK TABLES `permissions` WRITE;
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+INSERT INTO `permissions` VALUES (915030,108390);
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `prerequisites`
 --
 
@@ -144,8 +161,8 @@ CREATE TABLE `prerequisites` (
   `CID` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`PCID`,`CID`),
   KEY `CID` (`CID`),
-  CONSTRAINT `prerequisites_ibfk_1` FOREIGN KEY (`PCID`) REFERENCES `courses` (`CID`),
-  CONSTRAINT `prerequisites_ibfk_2` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`)
+  CONSTRAINT `prerequisites_ibfk_1` FOREIGN KEY (`PCID`) REFERENCES `courses` (`CID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `prerequisites_ibfk_2` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -155,7 +172,6 @@ CREATE TABLE `prerequisites` (
 
 LOCK TABLES `prerequisites` WRITE;
 /*!40000 ALTER TABLE `prerequisites` DISABLE KEYS */;
-INSERT INTO `prerequisites` VALUES (914040,915030),(915130,915140),(915150,915160),(911020,915450),(915460,915470),(914040,915610),(915630,915640),(915730,915740);
 /*!40000 ALTER TABLE `prerequisites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +190,7 @@ CREATE TABLE `sections` (
   `semesterID` varchar(1) NOT NULL DEFAULT '',
   PRIMARY KEY (`CID`,`secID`,`yearID`,`semesterID`),
   KEY `IID` (`IID`),
-  CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`IID`) REFERENCES `instructors` (`IID`)
+  CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`IID`) REFERENCES `instructors` (`IID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,7 +200,6 @@ CREATE TABLE `sections` (
 
 LOCK TABLES `sections` WRITE;
 /*!40000 ALTER TABLE `sections` DISABLE KEYS */;
-INSERT INTO `sections` VALUES (915030,201,1,2014,'F'),(915030,201,1,2015,'F'),(915030,201,1,2015,'S'),(915030,201,1,2016,'S'),(916730,201,1,2014,'F'),(916730,201,1,2015,'F'),(915000,201,2,2014,'F'),(915000,201,2,2015,'F'),(915130,201,2,2014,'F'),(915130,201,2,2015,'F'),(915140,201,2,2015,'S'),(915140,201,2,2016,'S'),(915460,201,2,2014,'F'),(915460,201,2,2015,'F'),(915470,201,2,2015,'S'),(915470,201,2,2016,'S'),(913080,201,3,2015,'S'),(913080,201,3,2016,'S'),(915150,201,3,2014,'F'),(915150,201,3,2015,'F'),(915160,201,3,2015,'S'),(915160,201,3,2016,'S'),(915300,201,4,2014,'F'),(915300,201,4,2015,'F'),(915300,201,4,2015,'S'),(915300,201,4,2016,'S'),(915300,202,5,2014,'F'),(915300,202,5,2015,'F'),(915300,202,5,2015,'S'),(915300,202,5,2016,'S'),(915450,201,6,2014,'F'),(915450,201,6,2015,'F'),(915450,201,6,2015,'S'),(915450,201,6,2016,'S'),(915610,201,7,2015,'S'),(915610,201,7,2016,'S'),(914040,201,8,2014,'F'),(914040,201,8,2015,'F'),(914040,201,8,2015,'S'),(914040,201,8,2016,'S'),(915630,201,8,2014,'F'),(915630,201,8,2015,'F'),(915640,201,8,2015,'S'),(915640,201,8,2016,'S'),(915440,201,9,2014,'F'),(915440,201,9,2015,'F'),(915730,201,9,2014,'F'),(915730,201,9,2015,'F'),(915740,201,9,2015,'S'),(915740,201,9,2016,'S'),(915800,201,10,2014,'F'),(915800,201,10,2015,'F'),(915800,201,10,2015,'S'),(915800,201,10,2016,'S'),(915800,202,11,2014,'F'),(915800,202,11,2015,'F'),(915800,202,11,2015,'S'),(915800,202,11,2016,'S'),(911020,201,12,2014,'F'),(911020,201,12,2015,'F'),(911020,301,12,2015,'S'),(911020,301,12,2016,'S');
 /*!40000 ALTER TABLE `sections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,7 +211,7 @@ DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `students` (
-  `SID` int(11) NOT NULL AUTO_INCREMENT,
+  `SID` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `IID` int(11) DEFAULT NULL,
   `major` varchar(255) DEFAULT NULL,
@@ -204,8 +219,8 @@ CREATE TABLE `students` (
   `career` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`SID`),
   KEY `IID` (`IID`),
-  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`IID`) REFERENCES `instructors` (`IID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1010147 DEFAULT CHARSET=latin1;
+  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`IID`) REFERENCES `instructors` (`IID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +229,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES (1010101,'James',1,'cs','bachelor','graduate'),(1010102,'John',2,'cs','bachelor','graduate'),(1010103,'Robert',3,'cs','bachelor','graduate'),(1010104,'Michael',4,'cs','bachelor','graduate'),(1010105,'william',5,'cs','bachelor','graduate'),(1010106,'Mary',6,'cs','bachelor','graduate'),(1010107,'Linda',7,'cs','bachelor','graduate'),(1010108,'Jennifer',8,'cs','bachelor','graduate'),(1010109,'Susan',9,'cs','bachelor','graduate'),(1010110,'Lisa',9,'cs','bachelor','graduate'),(1010116,'Tyler Alterio',11,'CS/EE','Associates','Undergraduate'),(1010117,'Michael Overy',12,'CS','Associates','Undergraduate'),(1010118,'Michael Overy',12,'CS','Associates','Undergraduate'),(1010139,'h',2,'h','h','h'),(1010140,'h',2,'h','h','h'),(1010141,'h',2,'h','h','h'),(1010142,'h',2,'h','h','h'),(1010143,'h',2,'h','h','h'),(1010144,'h',2,'h','h','h'),(1010145,'h',2,'h','h','h'),(1010146,'h',2,'h','h','h');
+INSERT INTO `students` VALUES (1010101,'James',1,'cs','bachelor','graduate'),(1010102,'John',2,'cs','bachelor','graduate'),(1010103,'Robert',3,'cs','bachelor','graduate'),(1010104,'Michael',4,'cs','bachelor','graduate'),(1010105,'william',5,'cs','bachelor','graduate'),(1010106,'Mary',6,'cs','bachelor','graduate'),(1010107,'Linda',7,'cs','bachelor','graduate'),(1010108,'Jennifer',8,'cs','bachelor','graduate'),(1010109,'Susan',9,'cs','bachelor','graduate'),(1010110,'Lisa',9,'cs','bachelor','graduate');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -227,4 +242,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-28 22:04:47
+-- Dump completed on 2016-04-04 17:35:01

@@ -31,9 +31,9 @@
                   $students = doQuery("SELECT SID, name FROM students");
                   while($row = $students->fetch_assoc())
                     if ($row['SID'] == $_SESSION['SID'])
-                      echo '<option selected value="'.$row['SID'].'">'.$row['name'].'</option>';
+                      echo '<option selected value="'.$row['SID'].'">'.$row['SID']." - ".$row['name'].'</option>';
                     else
-                      echo '<option value="'.$row['SID'].'">'.$row['name'].'</option>';
+                      echo '<option value="'.$row['SID'].'">'.$row['SID']." - ".$row['name'].'</option>';
                  ?>
               </select>
             </div>

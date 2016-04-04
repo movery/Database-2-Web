@@ -14,6 +14,12 @@
       <h1>Create a new student</h1>
       <form class="form-horizontal" role="form" method="POST">
         <div class="form-group">
+          <label class="control-label col-sm-2">SID:</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" placeholder="Enter SID" name="formSID" pattern="[0-9]+">
+          </div>
+        </div>
+        <div class="form-group">
           <label class="control-label col-sm-2">Name:</label>
           <div class="col-sm-2">
             <input type="text" class="form-control" placeholder="Enter name" name="formName" pattern="[A-Za-z\s]+">
@@ -63,19 +69,18 @@
 
       <?php
       if (isset($_POST['newStudent'])) {
+        $SID     = $_POST['formSID'];
         $name    = $_POST['formName'];
         $advisor = $_POST['formAdvisor'];
         $major   = $_POST['formMajor'];
         $degree  = $_POST['formDegree'];
         $career  = $_POST['formCareer'];
-        if ($name == "" || $advisor == "" || $major == "" || $degree == "" || $career == "") {
+        if ($SID == "" || $name == "" || $advisor == "" || $major == "" || $degree == "" || $career == "") {
           echo "<p>Please fill out every field</p>";
         } else {
-          doQuery("INSERT INTO students(name, IID, major, degreeHeld, career)
-                      VALUES('$name', '$advisor', '$major', '$degree', '$career')");
+          doQuery("INSERT INTO students(SID, name, IID, major, degreeHeld, career)
+                      VALUES('$SID', '$name', '$advisor', '$major', '$degree', '$career')");
 
-          // Gets the SID of the student we just inserted
-          $SID = doQuery("SELECT SID FROM students ORDER BY SID DESC LIMIT 1")->fetch_assoc()['SID'];
           $_SESSION['SID'] = $SID;
           pageRedirect('index.php');
         }
