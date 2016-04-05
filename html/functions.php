@@ -19,12 +19,15 @@
 
     // Dictionary for Letter-Grade to GPA value
     $possibleGrades = array("A"  => 4.00,
-                            "A-" => 3.66,
-                            "B+" => 3.33,
+                            "A-" => 3.7,
+                            "B+" => 3.3,
                             "B"  => 3.00,
-                            "B-" => 2.66,
-                            "C+" => 2.33,
+                            "B-" => 2.7,
+                            "C+" => 2.3,
                             "C"  => 2.00,
+                            "C-" => 1.7,
+                            "D+" => 1.3,
+                            "D"  => 1.0,
                             "F"  => 0.00);
 
     $enrolled = doQuery("SELECT CID, grade FROM enrollment WHERE SID = '$SID'");
