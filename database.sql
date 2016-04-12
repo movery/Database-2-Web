@@ -125,31 +125,6 @@ INSERT INTO `instructors` VALUES (1,'Tingjian Ge','Associate Professor'),(2,'Hai
 UNLOCK TABLES;
 
 --
--- Table structure for table `permissions`
---
-
-DROP TABLE IF EXISTS `permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `permissions` (
-  `CID` int(11) NOT NULL,
-  `PID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`CID`),
-  CONSTRAINT `fk_CID` FOREIGN KEY (`CID`) REFERENCES `courses` (`CID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `permissions`
---
-
-LOCK TABLES `permissions` WRITE;
-/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES (915030,108390);
-/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `prerequisites`
 --
 
@@ -172,6 +147,15 @@ CREATE TABLE `prerequisites` (
 
 LOCK TABLES `prerequisites` WRITE;
 /*!40000 ALTER TABLE `prerequisites` DISABLE KEYS */;
+INSERT INTO `prerequisites` (`PCID`, `CID`) VALUES
+(911020, 915450),
+(914040, 915030),
+(914040, 915610),
+(915130, 915140),
+(915150, 915160),
+(915460, 915470),
+(915630, 915640),
+(915730, 915740);
 /*!40000 ALTER TABLE `prerequisites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,6 +184,69 @@ CREATE TABLE `sections` (
 
 LOCK TABLES `sections` WRITE;
 /*!40000 ALTER TABLE `sections` DISABLE KEYS */;
+INSERT INTO `sections` (`CID`, `SecID`, `IID`, `yearID`, `semesterID`) VALUES
+(911020, 201, 12, 2014, 'F'),
+(911020, 201, 12, 2015, 'F'),
+(911020, 301, 12, 2015, 'S'),
+(911020, 301, 12, 2016, 'S'),
+(913080, 201, 3, 2015, 'S'),
+(913080, 201, 3, 2016, 'S'),
+(914040, 201, 8, 2014, 'F'),
+(914040, 201, 8, 2015, 'F'),
+(914040, 201, 8, 2015, 'S'),
+(914040, 201, 8, 2016, 'S'),
+(915000, 201, 2, 2014, 'F'),
+(915000, 201, 2, 2015, 'F'),
+(915030, 201, 1, 2014, 'F'),
+(915030, 201, 1, 2015, 'F'),
+(915030, 201, 1, 2015, 'S'),
+(915030, 201, 1, 2016, 'S'),
+(915130, 201, 2, 2014, 'F'),
+(915130, 201, 2, 2015, 'F'),
+(915140, 201, 2, 2015, 'S'),
+(915140, 201, 2, 2016, 'S'),
+(915150, 201, 3, 2014, 'F'),
+(915150, 201, 3, 2015, 'F'),
+(915160, 201, 3, 2015, 'S'),
+(915160, 201, 3, 2016, 'S'),
+(915300, 201, 4, 2014, 'F'),
+(915300, 201, 4, 2015, 'F'),
+(915300, 201, 4, 2015, 'S'),
+(915300, 201, 4, 2016, 'S'),
+(915300, 202, 5, 2014, 'F'),
+(915300, 202, 5, 2015, 'F'),
+(915300, 202, 5, 2015, 'S'),
+(915300, 202, 5, 2016, 'S'),
+(915440, 201, 9, 2014, 'F'),
+(915440, 201, 9, 2015, 'F'),
+(915450, 201, 6, 2014, 'F'),
+(915450, 201, 6, 2015, 'F'),
+(915450, 201, 6, 2015, 'S'),
+(915450, 201, 6, 2016, 'S'),
+(915460, 201, 2, 2014, 'F'),
+(915460, 201, 2, 2015, 'F'),
+(915470, 201, 2, 2015, 'S'),
+(915470, 201, 2, 2016, 'S'),
+(915610, 201, 7, 2015, 'S'),
+(915610, 201, 7, 2016, 'S'),
+(915630, 201, 8, 2014, 'F'),
+(915630, 201, 8, 2015, 'F'),
+(915640, 201, 8, 2015, 'S'),
+(915640, 201, 8, 2016, 'S'),
+(915730, 201, 9, 2014, 'F'),
+(915730, 201, 9, 2015, 'F'),
+(915740, 201, 9, 2015, 'S'),
+(915740, 201, 9, 2016, 'S'),
+(915800, 201, 10, 2014, 'F'),
+(915800, 201, 10, 2015, 'F'),
+(915800, 201, 10, 2015, 'S'),
+(915800, 201, 10, 2016, 'S'),
+(915800, 202, 11, 2014, 'F'),
+(915800, 202, 11, 2015, 'F'),
+(915800, 202, 11, 2015, 'S'),
+(915800, 202, 11, 2016, 'S'),
+(916730, 201, 1, 2014, 'F'),
+(916730, 201, 1, 2015, 'F');
 /*!40000 ALTER TABLE `sections` ENABLE KEYS */;
 UNLOCK TABLES;
 
