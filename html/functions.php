@@ -1,4 +1,25 @@
 <?php
+  function updateJson() {
+    $students = doQuery("SELECT * FROM students");
+
+    $jsonArray = array();
+    while ($student = $students->fetch_assoc()) {
+      $instructor = doQuery("SELECT name FROM instructors WHERE IID =".$student['IID'])->fetch_assoc();
+
+      $jsonArray[$student['SID']] = array('SID' => $student['SID'],
+                                          'name' => $student['name'],
+                                          'advisor' => $instructor['name'],
+                                          'major' => $student['major'],
+                                          'degree' => $student['degreeHeld'],
+                                          'career' => $student['career'],
+                                          'GPA' => calculateGPA($student['SID']));
+    }
+
+    $fp = fopen('studentInfo.json', 'w');
+    fwrite($fp, json_encode($jsonArray));
+    fclose($fp);
+  }
+
   function doQuery($query) {
     $con = new mysqli("localhost", "root", "", "GradStudents");
     if ($mysqli->connect_errno) {

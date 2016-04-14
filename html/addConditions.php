@@ -55,6 +55,7 @@
           $CID = $_POST['formCourse'];
           doQuery("INSERT INTO conditions(SID, CID)
                         VALUES('$SID', '$CID')");
+          updateJson();
           pageRedirect('addConditions.php');
         } elseif (isset($_POST['finish'])) {
           pageRedirect('index.php');

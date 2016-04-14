@@ -183,6 +183,7 @@
           } else {
             doQuery("INSERT INTO enrollment(SID, CID, secID, yearID, semesterID, grade)
                          VALUES('$SID', '$CID', '$secID', '$yearID', '$semesterID', '$grade')");
+            updateJson();
             pageRedirect('addClasses.php');
           }
         } elseif (isset($_POST['finish'])) {

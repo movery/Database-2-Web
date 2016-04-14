@@ -46,6 +46,7 @@
       </div>
 
       <?php
+      updateJson();
       if ($SID == "") {
           echo "<p>Please select a student</p>";
       } else {

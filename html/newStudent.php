@@ -80,7 +80,7 @@
         } else {
           doQuery("INSERT INTO students(SID, name, IID, major, degreeHeld, career)
                       VALUES('$SID', '$name', '$advisor', '$major', '$degree', '$career')");
-
+          updateJson();
           $_SESSION['SID'] = $SID;
           pageRedirect('index.php');
         }
