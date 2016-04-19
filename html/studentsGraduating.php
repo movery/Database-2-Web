@@ -19,7 +19,7 @@
       <?php
         $students = doQuery("SELECT SID, name FROM students");
         while ($row = $students->fetch_assoc()) {
-          if (returnStudentGraduationStatus($row['SID'])) {
+          if (returnStudentGraduationStatus($row['SID']) == "Student can graduate\n") {
             echo '<div class="col-xs-6">
               <h3>', $row['name'], '</h3>';
               displayStudentInfo($row['SID']);

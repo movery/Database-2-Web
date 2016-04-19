@@ -2,17 +2,20 @@
   function updateJson() {
     $students = doQuery("SELECT * FROM students");
 
-    $jsonArray = array();
+    $jsonArray['Students'] = array();
     while ($student = $students->fetch_assoc()) {
       $instructor = doQuery("SELECT name FROM instructors WHERE IID =".$student['IID'])->fetch_assoc();
 
-      $jsonArray[$student['SID']] = array('SID' => $student['SID'],
-                                          'name' => $student['name'],
-                                          'advisor' => $instructor['name'],
-                                          'major' => $student['major'],
-                                          'degree' => $student['degreeHeld'],
-                                          'career' => $student['career'],
-                                          'GPA' => calculateGPA($student['SID']));
+      $studentInfo = array('SID' => $student['SID'],
+                           'name' => $student['name'],
+                           'adviser' => $instructor['name'],
+                           'major' => $student['major'],
+                           'degree' => $student['degreeHeld'],
+                           'career' => $student['career'],
+                           'GPA' => strval(calculateGPA($student['SID'])),
+                           'GradStatus' => returnStudentGraduationStatus($student['SID']));
+
+      array_push($jsonArray['Students'], $studentInfo);
     }
 
     $fp = fopen('studentInfo.json', 'w');
@@ -293,7 +296,7 @@
     $counter     = 0;
     $lessThanB   = 0;
     $groups      = array(0, 0, 0, 0, 0);
-    $canGraduate = 1;
+    $canGraduate = "";
 
     // Dictionary for Letter-Grade to GPA value
     $possibleGrades = array("A"  => 4.00,
@@ -329,26 +332,26 @@
 
     // Check GPA, Credit Count, and Group Requirements
     if ($credits < 30) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Insufficient Credits\n";
     }
     if ($groups[1] == 0) {
       $class = doQuery("SELECT CID FROM courses WHERE name = 'Algorithms'")->fetch_assoc();
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Need Algorithms\n";
     }
     if ($groups[2] == 0) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Need a class from Group 2\n";
     }
     if ($groups[3] == 0) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Need a class from Group 3\n";
     }
     if ($groups[4] == 0) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Need a class from Group 4\n";
     }
     if ($grade < $possibleGrades['B']) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "GPA is less than a B\n";
     }
     if ($lessThanB > 2) {
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Too many grades below B\n";
     }
     // Query for unmet conditions
     $conditions = doQuery("SELECT CID FROM conditions
@@ -357,8 +360,11 @@
                                             WHERE SID = '$SID')");
     while($row = $conditions->fetch_assoc()) {
       $course = doQuery("SELECT name FROM courses WHERE CID =".$row['CID'])->fetch_assoc();
-      $canGraduate = 0;
+      $canGraduate = $canGraduate . "Need to take " . $course['name'] . "\n";
     }
+
+    if ($canGraduate == "")
+      $canGraduate = "Student can graduate\n";
 
     return $canGraduate;
   }
