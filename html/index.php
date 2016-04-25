@@ -41,6 +41,7 @@
             <button type="submit" class="btn btn-default" name="viewStudents">View Student Info</button>
             <a href="newStudent.php" class="btn btn-default" role="button">Create New Student</a>
             <a href="studentsGraduating.php" class="btn btn-default" role="button">View All Students who can Graduate</a>
+            <a href="DBViewer.apk" class="btn btn-default" role="button">Download the GradStatus app</a>
           </div>
         </form>
       </div>

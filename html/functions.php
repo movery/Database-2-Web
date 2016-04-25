@@ -332,11 +332,11 @@
 
     // Check GPA, Credit Count, and Group Requirements
     if ($credits < 30) {
-      $canGraduate = $canGraduate . "Insufficient Credits\n";
+      $canGraduate = $canGraduate . "Insufficient Credits - Currently have ".$credits."\n";
     }
     if ($groups[1] == 0) {
       $class = doQuery("SELECT CID FROM courses WHERE name = 'Algorithms'")->fetch_assoc();
-      $canGraduate = $canGraduate . "Need Algorithms\n";
+      $canGraduate = $canGraduate . "Need Algorithms - CID is ".$class['CID']."\n";
     }
     if ($groups[2] == 0) {
       $canGraduate = $canGraduate . "Need a class from Group 2\n";
@@ -348,10 +348,10 @@
       $canGraduate = $canGraduate . "Need a class from Group 4\n";
     }
     if ($grade < $possibleGrades['B']) {
-      $canGraduate = $canGraduate . "GPA is less than a B\n";
+      $canGraduate = $canGraduate . "GPA is less than a B - Currently have ".$grade."\n";
     }
     if ($lessThanB > 2) {
-      $canGraduate = $canGraduate . "Too many grades below B\n";
+      $canGraduate = $canGraduate . "Too many grades below B. Currently have ".$lessThanB."\n";
     }
     // Query for unmet conditions
     $conditions = doQuery("SELECT CID FROM conditions
@@ -360,7 +360,7 @@
                                             WHERE SID = '$SID')");
     while($row = $conditions->fetch_assoc()) {
       $course = doQuery("SELECT name FROM courses WHERE CID =".$row['CID'])->fetch_assoc();
-      $canGraduate = $canGraduate . "Need to take " . $course['name'] . "\n";
+      $canGraduate = $canGraduate . "Need to take ".$course['name']." - CID is ".$class['CID']."\n";
     }
 
     if ($canGraduate == "")
