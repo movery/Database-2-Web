@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="4">
+
+    <AutoCompleteTextView
+        android:id="@+id/autoComplete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </AutoCompleteTextView>
+
+    <TableRow>
+        <TextView
+            android:text="SID : "
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/SID"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Name :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/Name"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Adviser :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/Adviser"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Major :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/Major"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Degree :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/DegreeHeld"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Career :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/Career"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="GPA :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/GPA"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Status :"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/GradString"
+            android:layout_column="4"
+            android:text="-"
+            android:padding="3dip" />
+    </TableRow>
+</TableLayout>
